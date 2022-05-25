@@ -1,0 +1,88 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+#include<cmath>
+#include<climits>
+#include<vector>
+#include<stack>
+#include<queue>
+#include<unordered_map>
+#include<unordered_set>
+#include<map>
+#include<set>
+#include<list>
+
+using namespace std;
+bool hasCycle(vector<vector<char> > &board, int n, int m, int i, int j, vector<vector<bool> > &visited, char ch) {
+	int up=0, down=0, left=0, right=0;
+    if(i > 0){
+        up = (int)visited[i-1][j];
+    }
+    if(i+1 < n){
+        down = (int)visited[i+1][j];
+    }
+    if(j>0){
+        left = (int)board[i][j-1];
+    }
+    if(j+1 < m){
+        right = (int)board[i][j+1];
+    }
+    if((up+down+left+right) == 2){
+        return true;
+    }
+    
+    bool found = false;
+    // check up 
+    if(i>0 && board[i-1][j] == ch && !visited[i-1][j]){
+        visited[i-1][j] = true;
+        bool ans = hasCycle(board, n, m, i-1, j, visited, ch);
+        if(ans){
+            found = true;
+        } else {
+            board[i-1][j] = false;
+        }
+    }
+    // check left
+    if(j>0 && board[i][j-1] == ch && !visited[i][j-1]){
+        visited[i][j-1] = true;
+        bool ans = hasCycle(board, n, m, i, j-1, visited, ch);
+        if(ans){
+            found = true;
+        } else {
+            board[i][j-1] = false;
+        }
+    }
+    // check right
+    if(i+1 < n && board[i+1][j] == ch && !visited[i+1][j]){
+        visited[i+1][j] = true;
+        bool ans = hasCycle(board, n, m, i+1, j, visited, ch);
+        if(ans){
+            found = true;
+        } else {
+            board[i+1][j] = false;
+        }
+    }
+    // check down
+    if(j+1 < m && board[i][j+1] == ch && !visited[i][j+1]){
+        visited[i][j+1] = true;
+        bool ans = hasCycle(board, n, m, i, j+1, visited, ch);
+        if(ans){
+            found = true;
+        } else {
+            board[i][j+1] = false;
+        }
+    }
+    return found;
+}
+bool hasCycle(vector<vector<char> > &board, int n, int m) {
+    vector<vector<bool> > visited(n, vector<bool>(m, false));
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            bool ans = hasCycle(board, n, m , i , j, visited, board[i][j]);
+            if(ans){
+                return true;
+            }
+        }
+    }
+    return false;
+}
