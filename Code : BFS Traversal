@@ -1,0 +1,72 @@
+#include <iostream>
+#include<queue>
+using namespace std;
+
+void print(int** edge, int v, int sv,bool* visited)//sv is starting vertices
+{
+    queue<int> pendingVertices;
+    //now make an array to keep track of visited vertices
+    // bool* visited = new bool[v];
+    // for(int i=0; i<v; i++)
+    //     visited[i]=false;
+    pendingVertices.push(sv);
+    visited[sv] = true;
+    while(!pendingVertices.empty())
+    {
+        int currentVertex = pendingVertices.front();
+        pendingVertices.pop();
+        cout<<currentVertex<<" ";
+        for(int i=0; i<v; i++)
+        {
+            if(i==currentVertex)
+                continue;
+            if(edge[currentVertex][i] == 1 && !visited[i])
+            {
+               pendingVertices.push(i);
+               visited[i] = true; 
+            }
+                
+        }
+    }
+    //now we find if there are any other parts of graph (for )
+    for(int i=0;i<v;i++){
+        if(!visited[i]){
+            print(edge,v,i,visited);
+        }
+    }
+}
+
+
+int main() {
+    int v,e;
+    cin>>v>>e;
+    if(v==0)
+        return NULL;
+    if(e==0)
+    {
+        for(int i=0; i<v; i++)
+            cout<<i<<" ";
+        return NULL;
+    }
+    //now make a matrix
+    int **edge = new int*[v];
+    for(int i =0;i<v;i++)
+    {
+        edge[i] = new int[v];
+        for(int j=0; j<v; j++)
+            edge[i][j] = 0;
+    }
+    //now ask user to give vertices who have edges btw them
+    int f,s;//first second
+    for(int i=0; i<e; i++)
+    {
+        cin>>f>>s;
+        edge[f][s]=1;
+        edge[s][f]=1;
+    }
+ 	bool* visited = new bool[v];
+    for(int i=0; i<v; i++)
+        visited[i]=false;
+    //call print
+    print(edge,v,0,visited);
+}
