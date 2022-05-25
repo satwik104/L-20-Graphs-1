@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool getPath(int** graph, int v, bool* visited, int v1, int v2, vector<int> &ans)
+{
+    if(v1==v2)
+    {
+        ans.push_back(v1);
+        return true;
+    }
+    visited[v1] = true;
+    bool result=false;
+    for(int i=0; i<v; i++)
+    {
+        if(!visited[i] && graph[v1][i]==1)
+            result = getPath(graph,v,visited,i,v2,ans);
+        if(result)
+        {
+            ans.push_back(v1);
+            return true;
+        }
+    }
+    return result;
+}
+int main() {
+    int v,e;
+    cin>>v>>e;
+    
+    int** graph = new int*[v];
+    for(int i=0; i<v; i++)
+    {
+        graph[i] = new int[v];
+        for(int j=0; j<v; j++)
+            graph[i][j] = 0;
+    }
+    
+    int f,s;
+    for(int i=0; i<e; i++)
+    {
+        cin>>f>>s;
+        graph[f][s] = 1;
+        graph[s][f] = 1;
+    }
+    
+    int v1,v2;
+    cin>>v1>>v2;
+    
+    bool* visited = new bool[v];
+    for(int i=0; i<v; i++)
+        visited[i] = false;
+    vector<int> ans;
+    
+    if(getPath(graph,v,visited,v1,v2,ans))
+    {
+        for(auto i : ans)
+            cout<<i<<" ";
+    }
+    
+    delete[] visited;
+    for(int i=0; i<v; i++)
+        delete[] graph[i];
+    delete[] graph;
+    
+    return 0;
+}
