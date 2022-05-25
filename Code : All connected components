@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include<bits/stdc++.h>
+using namespace std;
+
+void printDFS(int** graph,int v, int sv, bool* visited,vector<int> &ans)
+{
+    ans.push_back(sv);
+    visited[sv]=true;
+    
+    for(int i=0;i<v;i++)
+    {
+        if(!visited[i] && graph[sv][i])
+            printDFS(graph,v,i,visited,ans);
+    }
+}
+
+void printDFS(int** graph,int v, int sv, bool* visited)
+{
+    vector<int> ans;
+    printDFS(graph,v,sv,visited,ans);
+    
+    sort(ans.begin(),ans.end());
+    for(auto i : ans)
+        cout<<i<<" ";
+}
+
+int main(){
+  int v;
+  int e;
+  cin >> v >> e;
+
+  int** graph = new int*[v];
+  for(int i=0; i<v; i++){
+    graph[i]=new int[v];
+    for(int j=0; j<v; j++){
+      graph[i][j]=0;
+    }
+  }
+
+  for(int i=0; i<e; i++){
+    int f,s;
+    cin >> f >> s;
+    graph[f][s]=1;
+    graph[s][f]=1;
+  }
+
+  bool* visited = new bool[v];
+
+  for(int i=0; i<v; i++){
+    visited[i]=false;
+  }
+  
+  for(int i=0; i<v; i++)
+  {
+      if(!visited[i])
+      {
+          printDFS(graph,v,i,visited);
+          cout<<endl;
+      }
+  }
+    
+  delete[] visited;
+    for(int i=0; i<v; i++)
+        delete[] graph[i];
+  delete[] graph;
+    return 0;
+}
